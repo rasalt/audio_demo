@@ -5,3 +5,6 @@ pip install --upgrade google-cloud-speech
 pip install --upgrade google-cloud-storage
 
 # audio_demo
+To run
+python3 speaker_diarization.py
+
