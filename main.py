@@ -1,6 +1,6 @@
 #Reference: https://cloud.google.com/speech-to-text/docs/async-recognize
 from google.cloud import speech_v1p1beta1 as speech
-import gcs
+import cloudstorage as gcs
 #from google.cloud import storage as gcs
 
 client = speech.SpeechClient()
@@ -50,9 +50,13 @@ def diarize(data, context):
   gcs.upload_blob('diarize_demo', dest_file)
 
 
-#def main():
+def main():
+  data = dict()  
+  data['name'] = "commercial_mono.wav"
+  data['bucket'] = "diarize_demo"
+  diarize(data,0)
 #        diarize('gs://diarize_demo/commercial_mono.wav')
 
 
-#if __name__ == "__main__":
-#    main()
+if __name__ == "__main__":
+    main()
