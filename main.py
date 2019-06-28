@@ -10,12 +10,16 @@ def diarize(data, context):
       
   speech_file = data['name']
   bucket = data['bucket']
+  
   print('Bucket {}'.format(bucket))
   print('File {}'.format(speech_file))
-  gcs_file = gcs.download_blob(bucket, speech_file)
-  with open(gcs_file, 'rb') as audio_file:
-     content = audio_file.read()
-
+#  gcs_file = gcs.download_blob(bucket, speech_file)
+#  with open(gcs_file, 'rb') as audio_file:
+#     content = audio_file.read()
+  filename = "gs://"+bucket+"/"+speech_file
+  print("filename {}".format(filename))
+  gcs_file = gcs.open(filename)
+  content = gcs_file.read()
   audio = speech.types.RecognitionAudio(content=content)
 
   config = speech.types.RecognitionConfig(
