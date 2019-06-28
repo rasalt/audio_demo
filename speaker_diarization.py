@@ -5,10 +5,14 @@ import gcs
 
 client = speech.SpeechClient()
 
-def diarize(gcs_uri):
+def diarize(data, context):
 
-  speech_file = gcs_uri
-  gcs_file = gcs.download_blob('diarize_demo','commercial_mono.wav')
+      
+  speech_file = data['name']
+  bucket = data['bucket']
+  print('Bucket {}'.format(bucket))
+  print('File {}'.format(speech_file))
+  gcs_file = gcs.download_blob(bucket, speech_file)
   with open(gcs_file, 'rb') as audio_file:
      content = audio_file.read()
 
@@ -42,9 +46,9 @@ def diarize(gcs_uri):
   gcs.upload_blob('diarize_demo', dest_file)
 
 
-def main():
-        diarize('gs://diarize_demo/commercial_mono.wav')
+#def main():
+#        diarize('gs://diarize_demo/commercial_mono.wav')
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
