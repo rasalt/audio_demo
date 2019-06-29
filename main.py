@@ -15,6 +15,7 @@ def diarize(data, context):
   print('Bucket {}'.format(bucket))
   print('File {}'.format(speech_file))
   filename_uri = "gs://"+bucket+"/"+speech_file
+  print('File name uri {}'.format(filename_uri))
   dest_file = speech_file+".txt"
 
   audio = speech.types.RecognitionAudio(uri=filename_uri)
@@ -25,20 +26,20 @@ def diarize(data, context):
       enable_speaker_diarization=True,
       diarization_speaker_count=2)
 
+  operation = client.long_running_recognize(config, audio)
   print('Waiting for operation to complete...')
-  response = client.recognize(config, audio)
 
 # The transcript within each result is separate and sequential per result.
 # However, the words list within an alternative includes all the words
 # from all the results thus far. Thus, to get all the words with speaker
 # tags, you only have to take the words list from the last result:
+  #print(response.results)
+  response = operation.result(timeout=300)
   result = response.results[-1]
-
   words_info = result.alternatives[0].words
-
   writestring = '' 
   for word_info in words_info:
-      writestring += "Word: {} Speaker Tag: {}\n".format(word_info.word,word_info.speaker_tag)
+     writestring += "Word: {} Speaker Tag: {}\n".format(word_info.word,word_info.speaker_tag)
   storage_client = storage.Client()
   bucket = storage_client.get_bucket(bucket)
   blob = Blob(dest_file, bucket)
